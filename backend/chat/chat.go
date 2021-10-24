@@ -17,10 +17,10 @@ type ChatServer struct {
 }
 
 
-func NewChatServer(commands *Commands) *ChatServer {
+func NewChatServer() *ChatServer {
 	return &ChatServer{
 		users: make(map[string]*User),
-		commands: commands,
+		commands: NewCommands(),
 		upgrader: &websocket.Upgrader{
 			ReadBufferSize: 512,
 			WriteBufferSize: 512,
@@ -31,15 +31,6 @@ func NewChatServer(commands *Commands) *ChatServer {
 		},
 	}
 }
-
-// var upgrader = websocket.Upgrader{
-// 	ReadBufferSize:  512,
-// 	WriteBufferSize: 512,
-// 	CheckOrigin: func(r *http.Request) bool {
-// 		log.Printf("%s %s%s %v\n", r.Method, r.Host, r.RequestURI, r.Proto)
-// 		return r.Method == http.MethodGet
-// 	},
-// }
 
 func (c *ChatServer) Handler(w http.ResponseWriter, r *http.Request) {
 	conn, err := c.upgrader.Upgrade(w, r, nil)
@@ -103,15 +94,15 @@ func Start(port string) {
 
 	log.Printf("Chat listening on http://localhost%s\n", port)
 
-	c := NewChatServer(NewCommands())
+	chatServer := NewChatServer()
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("Welcome to Go WebChat!"))
 	})
 
-	http.HandleFunc("/chat", c.Handler)
+	http.HandleFunc("/chat", chatServer.Handler)
 
-	go c.Run()
+	go chatServer.Run()
 
 	log.Fatal(http.ListenAndServe(port, nil))
 }
