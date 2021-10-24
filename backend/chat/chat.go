@@ -2,7 +2,7 @@ package chat
 
 import (
 	"fmt"
-	"web-chat-server/utils"
+	"web-chat-server/backend/utils"
 	"log"
 	"net/http"
 	"strings"

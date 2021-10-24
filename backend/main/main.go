@@ -1,7 +1,7 @@
 package main
 
 import (
-	"web-chat-server/chat"
+	"web-chat-server/backend/chat"
 	"flag"
 )
 

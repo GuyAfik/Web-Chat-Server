@@ -1,6 +1,6 @@
 package chat
 
-import "web-chat-server/utils"
+import "web-chat-server/backend/utils"
 
 type Message struct {
 	ID     int64  `json:"id"`

@@ -1,4 +1,4 @@
 #!/bin/bash
 
-go run main/main.go &
+go run backend/main/main.go &
 npm start --prefix frontend/webchat &
