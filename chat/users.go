@@ -11,7 +11,6 @@ type User struct {
 	Username string
 	Conn     *websocket.Conn
 	Commands *Commands
-	// Global   *ChatServer
 }
 
 func NewUser(username string, connection *websocket.Conn, commands *Commands) *User {
