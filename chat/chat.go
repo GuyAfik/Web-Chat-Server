@@ -10,11 +10,17 @@ import (
 	"github.com/gorilla/websocket"
 )
 
-type Chat struct {
+type ChatServer struct {
 	users    map[string]*User
-	messages chan *Message
-	join     chan *User
-	leave    chan *User
+	commands *Commands
+}
+
+
+func NewChatServer(commands *Commands) *ChatServer {
+	return &ChatServer{
+		users: make(map[string]*User),
+		commands: commands,
+	}
 }
 
 var upgrader = websocket.Upgrader{
@@ -26,7 +32,7 @@ var upgrader = websocket.Upgrader{
 	},
 }
 
-func (c *Chat) Handler(w http.ResponseWriter, r *http.Request) {
+func (c *ChatServer) Handler(w http.ResponseWriter, r *http.Request) {
 	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
 		log.Fatalln("Error on websocket connection:", err.Error())
@@ -38,31 +44,27 @@ func (c *Chat) Handler(w http.ResponseWriter, r *http.Request) {
 		username = fmt.Sprintf("anon-%d", utils.GetRandomI64())
 	}
 
-	user := &User{
-		Username: username,
-		Conn:     conn,
-		Global:   c,
-	}
+	user := NewUser(username, conn, c.commands)
 
-	c.join <- user
+	c.commands.join <- user
 
 	user.Read()
 }
 
-func (c *Chat) Run() {
+func (c *ChatServer) Run() {
 	for {
 		select {
-		case user := <-c.join:
+		case user := <-c.commands.join:
 			c.add(user)
-		case message := <-c.messages:
+		case message := <-c.commands.messages:
 			c.broadcast(message)
-		case user := <-c.leave:
+		case user := <-c.commands.leave:
 			c.disconnect(user)
 		}
 	}
 }
 
-func (c *Chat) add(user *User) {
+func (c *ChatServer) add(user *User) {
 	if _, ok := c.users[user.Username]; !ok {
 		c.users[user.Username] = user
 
@@ -71,14 +73,14 @@ func (c *Chat) add(user *User) {
 	}
 }
 
-func (c *Chat) broadcast(message *Message) {
+func (c *ChatServer) broadcast(message *Message) {
 	log.Printf("Broadcast message: %v\n", message)
 	for _, user := range c.users {
 		user.Write(message)
 	}
 }
 
-func (c *Chat) disconnect(user *User) {
+func (c *ChatServer) disconnect(user *User) {
 	if _, ok := c.users[user.Username]; ok {
 		defer user.Conn.Close()
 		delete(c.users, user.Username)
@@ -92,12 +94,7 @@ func Start(port string) {
 
 	log.Printf("Chat listening on http://localhost%s\n", port)
 
-	c := &Chat{
-		users:    make(map[string]*User),
-		messages: make(chan *Message),
-		join:     make(chan *User),
-		leave:    make(chan *User),
-	}
+	c := NewChatServer(NewCommands())
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("Welcome to Go WebChat!"))

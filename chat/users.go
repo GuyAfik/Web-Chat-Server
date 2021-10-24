@@ -10,7 +10,16 @@ import (
 type User struct {
 	Username string
 	Conn     *websocket.Conn
-	Global   *Chat
+	Commands *Commands
+	// Global   *ChatServer
+}
+
+func NewUser(username string, connection *websocket.Conn, commands *Commands) *User {
+	return &User{
+		Username: username,
+		Conn: connection,
+		Commands: commands,
+	}
 }
 
 func (u *User) Read() {
@@ -20,11 +29,11 @@ func (u *User) Read() {
 
 			break
 		} else {
-			u.Global.messages <- NewMessage(string(message), u.Username)
+			u.Commands.messages <- NewMessage(string(message), u.Username)
 		}
 	}
 
-	u.Global.leave <- u
+	u.Commands.leave <- u
 }
 
 func (u *User) Write(message *Message) {
