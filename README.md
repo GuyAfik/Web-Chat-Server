@@ -1,6 +1,6 @@
 # Web-Chat-Server
 
-### prerequisites
+## Prerequisites
 
 1) Javascript Package Manager should be installed - 
 https://docs.npmjs.com/downloading-and-installing-node-js-and-npm
