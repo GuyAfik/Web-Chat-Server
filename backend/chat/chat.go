@@ -13,6 +13,7 @@ import (
 type ChatServer struct {
 	users    map[string]*User
 	commands *Commands
+	upgrader *websocket.Upgrader
 }
 
 
@@ -20,20 +21,28 @@ func NewChatServer(commands *Commands) *ChatServer {
 	return &ChatServer{
 		users: make(map[string]*User),
 		commands: commands,
+		upgrader: &websocket.Upgrader{
+			ReadBufferSize: 512,
+			WriteBufferSize: 512,
+			CheckOrigin: func(r *http.Request) bool {
+				log.Printf("%s %s%s %v\n", r.Method, r.Host, r.RequestURI, r.Proto)
+				return r.Method == http.MethodGet
+			},
+		},
 	}
 }
 
-var upgrader = websocket.Upgrader{
-	ReadBufferSize:  512,
-	WriteBufferSize: 512,
-	CheckOrigin: func(r *http.Request) bool {
-		log.Printf("%s %s%s %v\n", r.Method, r.Host, r.RequestURI, r.Proto)
-		return r.Method == http.MethodGet
-	},
-}
+// var upgrader = websocket.Upgrader{
+// 	ReadBufferSize:  512,
+// 	WriteBufferSize: 512,
+// 	CheckOrigin: func(r *http.Request) bool {
+// 		log.Printf("%s %s%s %v\n", r.Method, r.Host, r.RequestURI, r.Proto)
+// 		return r.Method == http.MethodGet
+// 	},
+// }
 
 func (c *ChatServer) Handler(w http.ResponseWriter, r *http.Request) {
-	conn, err := upgrader.Upgrade(w, r, nil)
+	conn, err := c.upgrader.Upgrade(w, r, nil)
 	if err != nil {
 		log.Fatalln("Error on websocket connection:", err.Error())
 	}
