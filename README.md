@@ -10,7 +10,14 @@ a web socket currently on the local machine.
 
 ![](images/Web-Chat-Server-Server-Logs.png)
 
-### Requirements 
+### Prerequisites
+
+1) Javascript Package Manager should be installed - 
+https://docs.npmjs.com/downloading-and-installing-node-js-and-npm
+
+2) Go complier should be installed - https://golang.org/dl/
+
+### Web-Chat-Server Requirements 
 
 1) Client will be able to connect to the web-chat-server and choose its nick name.
 2) Client will be able to send messages to all of the other clients that are connected to the server.
@@ -41,13 +48,6 @@ Who is with me? ---> Server will return all the clients (usernames) that are con
 !privatemessage:alice:john:Hi Alice and John :-)
 !
 ```
-### Prerequisites
-
-1) Javascript Package Manager should be installed - 
-https://docs.npmjs.com/downloading-and-installing-node-js-and-npm
-
-2) Go complier should be installed - https://golang.org/dl/
-
-### Running Video
+### Running Video Example
 
 https://user-images.githubusercontent.com/53861351/138741339-059b10b7-0d08-498d-85af-966dd4b6bba1.mp4
