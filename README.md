@@ -27,6 +27,20 @@ https://docs.npmjs.com/downloading-and-installing-node-js-and-npm
 6) Client will be able to send private messages to any other client he wishes as long as that client is connected to the chat server.
 
 
+### Running Web-Chat-Server
+
+Simply run the following script:
+
+```
+./RunChatServer.sh
+```
+
+In order to stop, simply run the following script:
+
+```
+./StopChatServer.sh
+```
+
 ### Commands
 
 Clients can run commands in the web-chat-server,
