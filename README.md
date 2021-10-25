@@ -25,6 +25,7 @@ https://docs.npmjs.com/downloading-and-installing-node-js-and-npm
 4) Client will be able to get information about which clients are connected to the server (except himself)
 5) Client will be able to check what his username is.
 6) Client will be able to send private messages to any other client he wishes as long as that client is connected to the chat server.
+7) Client will get default name if the client chooses to leave the nick name empty
 
 
 ### Running Web-Chat-Server
