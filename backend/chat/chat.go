@@ -49,7 +49,7 @@ func (c *ChatServer) Handler(w http.ResponseWriter, r *http.Request) {
 
 	c.commands.join <- user
 
-	user.Read()
+	user.HandleUser()
 }
 
 func (c *ChatServer) Run() {
@@ -58,11 +58,36 @@ func (c *ChatServer) Run() {
 		case user := <-c.commands.join:
 			c.add(user)
 		case message := <-c.commands.messages:
-			c.broadcast(message)
+			c.processUserRequest(message)
 		case user := <-c.commands.leave:
 			c.disconnect(user)
 		}
 	}
+}
+
+func (c *ChatServer) processUserRequest(message *Message) {
+	username := message.Sender
+	switch message.Body {
+	case "!whoiswithme":
+		c.users[username].Write(NewMessage(c.whoIsWithUser(username), ServerSender))
+	default: 
+		c.broadcast(message)
+	}
+
+}
+
+
+func (c *ChatServer) whoIsWithUser(excludedUsername string) string {
+	otherClients := make([]string, 0)
+	for username := range c.users {
+		if username != excludedUsername {
+			otherClients = append(otherClients, username)
+		} 
+	}
+	if len(otherClients) == 0 {
+		return "No other clients"
+	}
+	return utils.StringArrayToString(otherClients, ", ")
 }
 
 func (c *ChatServer) add(user *User) {

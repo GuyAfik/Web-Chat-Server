@@ -16,14 +16,14 @@ type User struct {
 func NewUser(username string, connection *websocket.Conn, commands *Commands) *User {
 	return &User{
 		Username: username,
-		Conn: connection,
+		Conn:     connection,
 		Commands: commands,
 	}
 }
 
-func (u *User) Read() {
+func (u *User) HandleUser() {
 	for {
-		if _, message, err := u.Conn.ReadMessage(); err != nil {
+		if _, message, err := u.Read(); err != nil {
 			log.Println("Error on read message:", err.Error())
 
 			break
@@ -33,6 +33,11 @@ func (u *User) Read() {
 	}
 
 	u.Commands.leave <- u
+}
+
+
+func (u *User) Read() (int, []byte, error) {
+	return u.Conn.ReadMessage()
 }
 
 func (u *User) Write(message *Message) {

@@ -3,6 +3,7 @@ package utils
 import (
 	"math/rand"
 	"time"
+	"strings"
 )
 
 func GetRandom() *rand.Rand {
@@ -11,4 +12,8 @@ func GetRandom() *rand.Rand {
 
 func GetRandomI64() int64 {
 	return GetRandom().Int63()
+}
+
+func StringArrayToString(stringsSlice []string, delimiter string) string {
+	return strings.Join(stringsSlice, delimiter)
 }
