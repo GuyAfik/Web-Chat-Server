@@ -17,6 +17,10 @@ https://docs.npmjs.com/downloading-and-installing-node-js-and-npm
 
 2) Go complier should be installed - https://golang.org/dl/
 
+Simple guide to setup Golang in your mac/linux:
+
+https://gist.github.com/sathiyaseelan/529695891e290991573d278a56180535
+
 ### Web-Chat-Server Requirements 
 
 1) Client will be able to connect to the web-chat-server and choose its nick name.
