@@ -41,8 +41,8 @@ func (c *ChatServer) Handler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	keys := r.URL.Query()
-	username := keys.Get("username")
-	if strings.TrimSpace(username) == "" {
+	username := strings.TrimSpace(keys.Get("username"))
+	if username == "" {
 		username = fmt.Sprintf("anonnymous-%d", utils.GetRandomI64())
 	}
 	user := NewUser(username, conn, c.commands)
@@ -97,7 +97,7 @@ func (c *ChatServer) add(user *User) {
 		c.users[user.Username] = user
 
 		body := fmt.Sprintf("%s joined the chat", user.Username)
-		c.broadcast(NewMessage(body, "Server"))
+		c.broadcast(NewMessage(body, ServerSender))
 	}
 }
 
