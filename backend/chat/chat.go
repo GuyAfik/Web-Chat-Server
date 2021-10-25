@@ -64,20 +64,33 @@ func (c *ChatServer) Run() {
 		}
 	}
 }
-
+//!privatemessage:guy:kobi:Hello
 func (c *ChatServer) processUserRequest(message *Message) {
 	username := message.Sender
-	switch message.Body {
+	parsedMessageBody := utils.ParseMessageBody(message.Body, ":")
+	switch parsedMessageBody[0] {
 	case "!whoiswithme":
 		c.users[username].Write(NewMessage(c.whoIsWithUser(username), ServerSender))
 	case "!whoami":
 		c.users[username].Write(NewMessage(fmt.Sprintf("You are the user: %s", username), ServerSender))
+	case "!privatemessage":
+		c.privateMessage(
+			NewMessage(parsedMessageBody[len(parsedMessageBody) - 1], message.Sender), parsedMessageBody[1:len(parsedMessageBody) - 1]...
+		)
 	default: 
 		c.broadcast(message)
 	}
 
 }
 
+
+func (c *ChatServer) privateMessage(message *Message, usernames... string) {
+	for _, username := range usernames {
+		if user, ok := c.users[username]; ok {
+			user.Write(message)
+		}
+	}
+}
 
 func (c *ChatServer) whoIsWithUser(excludedUsername string) string {
 	otherClients := make([]string, 0)

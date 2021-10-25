@@ -25,7 +25,6 @@ func (u *User) HandleUser() {
 	for {
 		if _, message, err := u.Read(); err != nil {
 			log.Println("Error on read message:", err.Error())
-
 			break
 		} else {
 			u.Commands.messages <- NewMessage(string(message), u.Username)
@@ -41,9 +40,9 @@ func (u *User) Read() (int, []byte, error) {
 }
 
 func (u *User) Write(message *Message) {
-	b, _ := json.Marshal(message)
+	jsonMessage, _ := json.Marshal(message)
 
-	if err := u.Conn.WriteMessage(websocket.TextMessage, b); err != nil {
+	if err := u.Conn.WriteMessage(websocket.TextMessage, jsonMessage); err != nil {
 		log.Println("Error on write message:", err.Error())
 	}
 }

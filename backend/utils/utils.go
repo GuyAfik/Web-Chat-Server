@@ -17,3 +17,7 @@ func GetRandomI64() int64 {
 func StringArrayToString(stringsSlice []string, delimiter string) string {
 	return strings.Join(stringsSlice, delimiter)
 }
+
+func ParseMessageBody(message, delimiter string) []string {
+	return strings.Split(message, delimiter)
+}
