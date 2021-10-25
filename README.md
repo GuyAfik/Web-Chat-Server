@@ -28,4 +28,5 @@ https://docs.npmjs.com/downloading-and-installing-node-js-and-npm
 
 ### Running Video
 
-![](videos/Web-Chat-Server-Video-Example.mkv)
+https://user-images.githubusercontent.com/53861351/138741339-059b10b7-0d08-498d-85af-966dd4b6bba1.mp4
+
