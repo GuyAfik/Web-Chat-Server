@@ -29,8 +29,8 @@ https://docs.npmjs.com/downloading-and-installing-node-js-and-npm
 
 ### Commands
 
-Clients can run commands in the web-chat-server.
-This is demonstrated in the video below.
+Clients can run commands in the web-chat-server,
+this is demonstrated in the video below.
 
 Who am I? ---> Server will return the username of the client running that command.
 ```
@@ -46,7 +46,6 @@ Who is with me? ---> Server will return all the clients (usernames) that are con
 ```
 !privatemessage:<username1:username2>...:<message>
 !privatemessage:alice:john:Hi Alice and John :-)
-!
 ```
 ### Running Video Example
 
