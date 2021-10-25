@@ -113,7 +113,7 @@ func (c *ChatServer) disconnect(user *User) {
 		defer user.Conn.Close()
 		delete(c.users, user.Username)
 
-		body := fmt.Sprintf("%s left the chat", user.Username)
+		body := fmt.Sprintf("%s has left the chat server :-(", user.Username)
 		c.broadcast(NewMessage(body, ServerSender))
 	}
 }
