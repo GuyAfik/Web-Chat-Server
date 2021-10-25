@@ -10,6 +10,8 @@ import (
 	"github.com/gorilla/websocket"
 )
 
+const ServerSender = "Server"
+
 type ChatServer struct {
 	users    map[string]*User
 	commands *Commands
@@ -41,9 +43,8 @@ func (c *ChatServer) Handler(w http.ResponseWriter, r *http.Request) {
 	keys := r.URL.Query()
 	username := keys.Get("username")
 	if strings.TrimSpace(username) == "" {
-		username = fmt.Sprintf("anon-%d", utils.GetRandomI64())
+		username = fmt.Sprintf("anonnymous-%d", utils.GetRandomI64())
 	}
-
 	user := NewUser(username, conn, c.commands)
 
 	c.commands.join <- user
@@ -68,7 +69,7 @@ func (c *ChatServer) add(user *User) {
 	if _, ok := c.users[user.Username]; !ok {
 		c.users[user.Username] = user
 
-		body := fmt.Sprintf("%s join the chat", user.Username)
+		body := fmt.Sprintf("%s joined the chat", user.Username)
 		c.broadcast(NewMessage(body, "Server"))
 	}
 }
@@ -86,7 +87,7 @@ func (c *ChatServer) disconnect(user *User) {
 		delete(c.users, user.Username)
 
 		body := fmt.Sprintf("%s left the chat", user.Username)
-		c.broadcast(NewMessage(body, "Server"))
+		c.broadcast(NewMessage(body, ServerSender))
 	}
 }
 

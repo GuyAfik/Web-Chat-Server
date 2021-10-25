@@ -1,5 +1,18 @@
 # Web-Chat-Server
 
+Web-Chat-Server is a chat server based on react JS as its frontend and GoLang 
+as its backend. 
+
+Web-Chat-Server is based on web sockets where each client connects to the server with 
+a web socket currently on the local machine. 
+
+## Requirments 
+
+1) Client will be able to connect to the web-chat-server and choose its nick name.
+2) Client will be able to send messages to all of the other clients that are connected to the server.
+3) Client will be able to leave the server whenever he wishes.
+4) Client will be able to get information about which clients are connected to the server (except himself)
+
 ## Prerequisites
 
 1) Javascript Package Manager should be installed - 
