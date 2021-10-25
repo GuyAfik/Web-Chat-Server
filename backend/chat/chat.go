@@ -94,6 +94,9 @@ func (c *ChatServer) processUserRequest(message *Message) {
 func (c *ChatServer) response(body, sender string, usernames ...string) {
 	responseMessage := NewMessage(body, sender)
 	if len(usernames) > 0 {
+		if sender != ServerSender {
+			responseMessage.Sender = fmt.Sprintf("Private message [%s]", sender)
+		}
 		c.privateMessage(responseMessage, usernames...)
 	} else {
 		c.broadcast(responseMessage)
