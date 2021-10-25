@@ -19,6 +19,28 @@ a web socket currently on the local machine.
 5) Client will be able to check what his username is.
 6) Client will be able to send private messages to any other client he wishes as long as that client is connected to the chat server.
 
+
+### Commands
+
+Clients can run commands in the web-chat-server.
+This is demonstrated in the video below.
+
+Who am I? ---> Server will return the username of the client running that command.
+```
+!whoami
+```
+
+Who is with me? ---> Server will return all the clients (usernames) that are connected to the server.
+```
+!whoiswithme
+```
+
+!privatemessage ---> send private message to other clients.
+```
+!privatemessage:<username1:username2>...:<message>
+!privatemessage:alice:john:Hi Alice and John :-)
+!
+```
 ### Prerequisites
 
 1) Javascript Package Manager should be installed - 
