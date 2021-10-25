@@ -70,6 +70,8 @@ func (c *ChatServer) processUserRequest(message *Message) {
 	switch message.Body {
 	case "!whoiswithme":
 		c.users[username].Write(NewMessage(c.whoIsWithUser(username), ServerSender))
+	case "!whoami":
+		c.users[username].Write(NewMessage(fmt.Sprintf("You are the user: %s", username), ServerSender))
 	default: 
 		c.broadcast(message)
 	}
