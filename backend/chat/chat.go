@@ -64,13 +64,13 @@ func (c *ChatServer) Run() {
 	}
 }
 func (c *ChatServer) processUserRequest(message *Message) {
-	username := message.Sender
+	senderUser := message.Sender
 	parsedMessageBody := utils.ParseMessageBody(message.Body, ":")
 	switch parsedMessageBody[0] {
 	case "!whoiswithme":
-		c.users[username].Write(NewMessage(c.whoIsWithUser(username), ServerSender))
+		c.response(c.whoIsWithUser(senderUser), ServerSender, senderUser)
 	case "!whoami":
-		c.users[username].Write(NewMessage(fmt.Sprintf("You are the user: %s", username), ServerSender))
+		c.response(fmt.Sprintf("You are the user %s", senderUser), ServerSender, senderUser)
 	case "!privatemessage":
 		if len(parsedMessageBody) < 3 {
 			c.response(
@@ -81,10 +81,10 @@ func (c *ChatServer) processUserRequest(message *Message) {
 		c.response(
 			parsedMessageBody[len(parsedMessageBody)-1],
 			message.Sender,
-			parsedMessageBody[1:len(parsedMessageBody)-1]...,
+			append(parsedMessageBody[1:len(parsedMessageBody)-1], senderUser)...,
 		)
 	default:
-		c.response(message.Body, message.Sender)
+		c.response(message.Body, senderUser)
 	}
 
 }
@@ -92,7 +92,7 @@ func (c *ChatServer) processUserRequest(message *Message) {
 func (c *ChatServer) response(body, sender string, usernames ...string) {
 	responseMessage := NewMessage(body, sender)
 	if len(usernames) > 0 {
-		c.privateMessage(responseMessage, append(usernames, sender)...)
+		c.privateMessage(responseMessage, usernames...)
 	} else {
 		c.broadcast(responseMessage)
 	}
@@ -116,7 +116,7 @@ func (c *ChatServer) whoIsWithUser(excludedUsername string) string {
 	if len(otherClients) == 0 {
 		return "No other clients"
 	}
-	return utils.StringArrayToString(otherClients, ", ")
+	return fmt.Sprintf("Other connected clients: %s", utils.StringArrayToString(otherClients, ", "))
 }
 
 func (c *ChatServer) add(user *User) {
