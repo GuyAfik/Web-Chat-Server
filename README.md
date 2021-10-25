@@ -6,6 +6,10 @@ as its backend.
 Web-Chat-Server is based on web sockets where each client connects to the server with 
 a web socket currently on the local machine. 
 
+![](images/Web-Chat-Server-Example.png)
+
+![](images/Web-Chat-Server-Server-Logs.png)
+
 ### Requirements 
 
 1) Client will be able to connect to the web-chat-server and choose its nick name.
