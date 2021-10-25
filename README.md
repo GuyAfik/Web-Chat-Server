@@ -54,3 +54,7 @@ Who is with me? ---> Server will return all the clients (usernames) that are con
 ### Running Video Example
 
 https://user-images.githubusercontent.com/53861351/138741339-059b10b7-0d08-498d-85af-966dd4b6bba1.mp4
+
+### Notes
+
+This is not a production server, so do not use it for that matter.
