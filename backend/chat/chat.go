@@ -2,10 +2,10 @@ package chat
 
 import (
 	"fmt"
-	"web-chat-server/backend/utils"
 	"log"
 	"net/http"
 	"strings"
+	"web-chat-server/backend/utils"
 
 	"github.com/gorilla/websocket"
 )
@@ -18,13 +18,12 @@ type ChatServer struct {
 	upgrader *websocket.Upgrader
 }
 
-
 func NewChatServer() *ChatServer {
 	return &ChatServer{
-		users: make(map[string]*User),
+		users:    make(map[string]*User),
 		commands: NewCommands(),
 		upgrader: &websocket.Upgrader{
-			ReadBufferSize: 512,
+			ReadBufferSize:  512,
 			WriteBufferSize: 512,
 			CheckOrigin: func(r *http.Request) bool {
 				log.Printf("%s %s%s %v\n", r.Method, r.Host, r.RequestURI, r.Proto)
@@ -64,7 +63,6 @@ func (c *ChatServer) Run() {
 		}
 	}
 }
-//!privatemessage:guy:kobi:Hello
 func (c *ChatServer) processUserRequest(message *Message) {
 	username := message.Sender
 	parsedMessageBody := utils.ParseMessageBody(message.Body, ":")
@@ -74,17 +72,33 @@ func (c *ChatServer) processUserRequest(message *Message) {
 	case "!whoami":
 		c.users[username].Write(NewMessage(fmt.Sprintf("You are the user: %s", username), ServerSender))
 	case "!privatemessage":
-		c.privateMessage(
-			NewMessage(parsedMessageBody[len(parsedMessageBody) - 1], message.Sender), parsedMessageBody[1:len(parsedMessageBody) - 1]...
+		if len(parsedMessageBody) < 3 {
+			c.response(
+				fmt.Sprintf("Message Body: %s does not have enough arguments", message.Body),
+				ServerSender,
+			)
+		}
+		c.response(
+			parsedMessageBody[len(parsedMessageBody)-1],
+			message.Sender,
+			parsedMessageBody[1:len(parsedMessageBody)-1]...,
 		)
-	default: 
-		c.broadcast(message)
+	default:
+		c.response(message.Body, message.Sender)
 	}
 
 }
 
+func (c *ChatServer) response(body, sender string, usernames ...string) {
+	responseMessage := NewMessage(body, sender)
+	if len(usernames) > 0 {
+		c.privateMessage(responseMessage, append(usernames, sender)...)
+	} else {
+		c.broadcast(responseMessage)
+	}
+}
 
-func (c *ChatServer) privateMessage(message *Message, usernames... string) {
+func (c *ChatServer) privateMessage(message *Message, usernames ...string) {
 	for _, username := range usernames {
 		if user, ok := c.users[username]; ok {
 			user.Write(message)
@@ -97,7 +111,7 @@ func (c *ChatServer) whoIsWithUser(excludedUsername string) string {
 	for username := range c.users {
 		if username != excludedUsername {
 			otherClients = append(otherClients, username)
-		} 
+		}
 	}
 	if len(otherClients) == 0 {
 		return "No other clients"
