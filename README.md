@@ -6,7 +6,7 @@ as its backend.
 Web-Chat-Server is based on web sockets where each client connects to the server with 
 a web socket currently on the local machine. 
 
-## Requirments 
+### Requirements 
 
 1) Client will be able to connect to the web-chat-server and choose its nick name.
 2) Client will be able to send messages to all of the other clients that are connected to the server.
@@ -15,7 +15,7 @@ a web socket currently on the local machine.
 5) Client will be able to check what his username is.
 6) Client will be able to send private messages to any other client he wishes as long as that client is connected to the chat server.
 
-## Prerequisites
+### Prerequisites
 
 1) Javascript Package Manager should be installed - 
 https://docs.npmjs.com/downloading-and-installing-node-js-and-npm
