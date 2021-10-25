@@ -77,12 +77,14 @@ func (c *ChatServer) processUserRequest(message *Message) {
 				fmt.Sprintf("Message Body: %s does not have enough arguments", message.Body),
 				ServerSender,
 			)
+		} else {
+			body := parsedMessageBody[len(parsedMessageBody)-1]
+			c.response(
+				body,
+				message.Sender,
+				append(parsedMessageBody[1:len(parsedMessageBody)-1], senderUser)...,
+			)
 		}
-		c.response(
-			parsedMessageBody[len(parsedMessageBody)-1],
-			message.Sender,
-			append(parsedMessageBody[1:len(parsedMessageBody)-1], senderUser)...,
-		)
 	default:
 		c.response(message.Body, senderUser)
 	}
@@ -99,6 +101,7 @@ func (c *ChatServer) response(body, sender string, usernames ...string) {
 }
 
 func (c *ChatServer) privateMessage(message *Message, usernames ...string) {
+	log.Printf("Private message: %v, users: %v\n", message, usernames)
 	for _, username := range usernames {
 		if user, ok := c.users[username]; ok {
 			user.Write(message)
