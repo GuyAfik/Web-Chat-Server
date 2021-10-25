@@ -32,6 +32,10 @@ https://docs.npmjs.com/downloading-and-installing-node-js-and-npm
 Clients can run commands in the web-chat-server,
 this is demonstrated in the video below.
 
+All the commands in the server are starting with a question mark (!).
+If the message does not start with a question mark, it will be automaticlly broadcasted as 
+a message to all the rest of the clients that are connected to the server. 
+
 Who am I? ---> Server will return the username of the client running that command.
 ```
 !whoami
